@@ -1,11 +1,12 @@
 package com.tongji.f4.stt.controller;
 
+import com.tongji.f4.stt.service.FileOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @program: stt
@@ -18,11 +19,28 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "文件上传接口")
 @RequestMapping("/upload")
 public class FileUploadController {
-    @GetMapping("/excel")
+    @Autowired(required = true)
+    FileOperator fo;
+
+    @PostMapping("/excel")
     @ApiOperation("上传excel文件")
-    @ApiImplicitParam(name = "file", value = "excel文件", defaultValue = "hello", required = true)
-    public String hello(String file){
-        return file + "received";
+    @ApiImplicitParam(name = "excel_file", value = "excel文件", required = true)
+    public String uploadExcel(@RequestParam("excel_file") MultipartFile excelFIle){
+        if(fo.saveExcelFile(excelFIle)){
+            return "Success";
+        }else {
+            return "Failure";
+        }
     }
 
+    @PostMapping("/jar")
+    @ApiOperation("上传jar文件")
+    @ApiImplicitParam(name = "jar_file", value = "jar文件", required = true)
+    public String uploadJar(@RequestParam("jar_file") MultipartFile jarFile){
+        if(fo.saveJarFile(jarFile)){
+            return "success";
+        }else {
+            return "failure";
+        }
+    }
 }
