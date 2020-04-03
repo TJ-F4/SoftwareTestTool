@@ -1,11 +1,10 @@
 package com.tongji.f4.stt.util;
 
-import com.tongji.f4.stt.model.MethodSignature;
+import com.tongji.f4.stt.model.method.MethodSignature;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -40,7 +39,7 @@ public class JarParser {
                         paramTypes[i] = params[i].getTypeName();
                     }
                     ms.setMethodName(m.getName());
-                    ms.setParamClass(paramTypes);
+                    ms.setParamType(paramTypes);
                     ms.setReturnType(m.getReturnType().getName());
                     mss.add(ms);
                 }
@@ -80,5 +79,12 @@ public class JarParser {
             e.printStackTrace();
         }
         return classList;
+    }
+
+    public Class getClass(String className) throws ClassNotFoundException {
+        if(ucl != null){
+            return ucl.loadClass(className);
+        }
+        return null;
     }
 }

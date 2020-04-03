@@ -20,6 +20,7 @@ public class ExcelParser {
         Workbook wb = WorkbookFactory.create(excelFileStream);
         Sheet sheet = wb.getSheetAt(0);
         Row row = sheet.getRow(0);
+
         Cell cell = row.getCell(0);
         if (cell != null) {
             String v = cell.getStringCellValue();

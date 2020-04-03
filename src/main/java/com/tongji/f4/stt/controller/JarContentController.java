@@ -1,7 +1,6 @@
 package com.tongji.f4.stt.controller;
 
-import com.tongji.f4.stt.model.MethodSignature;
-import com.tongji.f4.stt.service.FileOperator;
+import com.tongji.f4.stt.model.method.MethodSignature;
 import com.tongji.f4.stt.service.GlobalVariableOperator;
 import com.tongji.f4.stt.util.JarParser;
 import io.swagger.annotations.Api;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -25,7 +23,7 @@ import java.util.List;
  **/
 
 @RestController
-@Api(tags = "Jar包操作API")
+@Api(tags = "Jar包操作接口")
 @RequestMapping("/jar")
 public class JarContentController {
 
