@@ -26,6 +26,12 @@ public class GlobalVariableOperator {
     public GlobalVariableOperator() {
         String path = SttApplication.class.getProtectionDomain().getCodeSource().getLocation().getFile();
         Root = new File(path).getParentFile().getAbsolutePath();
+
+        int sep = Root.lastIndexOf("\\file:");
+        if(sep >= 0 && sep < Root.length()){
+            Root = Root.substring(0, sep);
+        }
+
         JarDirectory = Root + File.separator + "jar";
         ExcelDirectory = Root + File.separator + "excel";
         File excelDir = new File(JarDirectory);
@@ -37,6 +43,7 @@ public class GlobalVariableOperator {
             jarDir.mkdir();
         }
         jarClMap = new HashMap<>();
+        LOGGER.info("Root is " + Root);
     }
 
     public String getExcelPath(String fileName){
