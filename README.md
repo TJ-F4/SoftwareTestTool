@@ -20,7 +20,7 @@
 
 - 获取某个类的所有方法
 
-![image-20200404001754680](F:\Project\GithubProject\stt\img\getMethods.png)
+![](img/getMethods.png)
 
 
 
