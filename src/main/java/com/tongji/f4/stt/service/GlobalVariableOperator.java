@@ -67,4 +67,13 @@ public class GlobalVariableOperator {
     public boolean isJarLoaded(String jarName){
         return jarClMap.containsKey(jarName);
     }
+
+    public String getJarDirectory() {
+        return JarDirectory;
+    }
+
+    public String getExcelDirectory() {
+        return ExcelDirectory;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.tongji.f4.stt.controller;
 
 import com.tongji.f4.stt.model.method.MethodSignature;
+import com.tongji.f4.stt.model.testresult.ExcelTestResult;
 import com.tongji.f4.stt.model.testsuite.ExcelTestSuite;
 import com.tongji.f4.stt.service.GlobalVariableOperator;
 import com.tongji.f4.stt.util.MethodTester;
@@ -29,7 +30,7 @@ public class TestProcessController {
 
     @ApiOperation("运行测试用例")
     @PostMapping("/run")
-    public List<String> runTestCase(@RequestBody(required = true) ExcelTestSuite excelTestSuite){
+    public ExcelTestResult runTestCase(@RequestBody(required = true) ExcelTestSuite excelTestSuite){
         MethodTester mt = MethodTester.create(gvo, excelTestSuite);
         return mt.runTest();
     }

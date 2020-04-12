@@ -1,6 +1,7 @@
 package com.tongji.f4.stt.controller;
 
 import com.tongji.f4.stt.model.method.MethodSignature;
+import com.tongji.f4.stt.service.FileOperator;
 import com.tongji.f4.stt.service.GlobalVariableOperator;
 import com.tongji.f4.stt.util.JarParser;
 import io.swagger.annotations.Api;

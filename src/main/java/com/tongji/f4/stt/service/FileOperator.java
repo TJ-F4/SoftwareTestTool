@@ -57,4 +57,16 @@ public class FileOperator {
     public boolean saveJarFile(MultipartFile jarFile){
         return saveFile(gvo.getJarPath(jarFile.getOriginalFilename()), jarFile);
     }
+
+    public String[] getAllJars(){
+        String jarRoot = gvo.getJarDirectory();
+        File jarDir = new File(jarRoot);
+        return jarDir.list();
+    }
+
+    public String[] getAllExcels(){
+        String excelRoot = gvo.getExcelDirectory();
+        File excelDir = new File(excelRoot);
+        return excelDir.list();
+    }
 }

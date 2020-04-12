@@ -24,8 +24,8 @@ public class FileUploadController {
 
     @PostMapping("/excel")
     @ApiOperation("上传excel文件")
-    @ApiImplicitParam(name = "excel_file", value = "excel文件", required = true)
-    public String uploadExcel(@RequestParam("excel_file") MultipartFile excelFIle){
+    @ApiImplicitParam(name = "file", value = "excel文件", required = true)
+    public String uploadExcel(@RequestParam("file") MultipartFile excelFIle){
         if(fo.saveExcelFile(excelFIle)){
             return "Success";
         }else {
@@ -35,8 +35,8 @@ public class FileUploadController {
 
     @PostMapping("/jar")
     @ApiOperation("上传jar文件")
-    @ApiImplicitParam(name = "jar_file", value = "jar文件", required = true)
-    public String uploadJar(@RequestParam("jar_file") MultipartFile jarFile){
+    @ApiImplicitParam(name = "file", value = "jar文件", required = true)
+    public String uploadJar(@RequestParam("file") MultipartFile jarFile){
         if(fo.saveJarFile(jarFile)){
             return "success";
         }else {

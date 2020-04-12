@@ -2,6 +2,7 @@ package com.tongji.f4.stt.util;
 
 import com.tongji.f4.stt.model.method.MethodLocator;
 import com.tongji.f4.stt.model.method.MethodSignature;
+import com.tongji.f4.stt.model.testresult.ExcelTestResult;
 import com.tongji.f4.stt.model.testsuite.ExcelTestSuite;
 import com.tongji.f4.stt.service.GlobalVariableOperator;
 import com.tongji.f4.stt.util.testcase.ExcelTestCase;
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -69,32 +71,40 @@ public class MethodTester {
         this.gvo = gvo;
     }
 
-    public List<String> runTest(){
+    public ExcelTestResult runTest(){
         Iterator<List<String>> iter = ExcelTestCase.create(gvo, fileName);
-        List<String> testResult = new ArrayList<>();
+        ExcelTestResult testResult = new ExcelTestResult();
         List<String> param;
-        int currentRow = 0;
+        int currentRow = 0, passed = 0;
         while (iter != null && iter.hasNext()){
+            currentRow++;
             param = iter.next();
             if(param.size() - 1 != params.length){
+                testResult.addFailLog("第" + currentRow + "行参数不匹配\n");
                 continue;
             }
             Object[] actualParam = tryParseParam(param.subList(0, param.size() - 1));
             if(actualParam == null){
+                testResult.addFailLog("第" + currentRow + "行参数类型不正确\n");
                 continue;
             }
             try {
                 Object returnVal = method.invoke(instance, actualParam);
                 Object expectVal = param.get(param.size() - 1);
-                boolean isMatch = returnVal.equals(expectVal);
-                String result = "Test case in row " + currentRow++ + " expect returned value " + expectVal + ", get " + returnVal;
-                testResult.add(result);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
+
+                if(!expectVal.equals(returnVal)){
+                    String log = "第" + currentRow + "行测试用例不通过，预期值为 " + expectVal + ", 实际值为 " + returnVal + "\n";
+                    testResult.addFailLog(log);
+                }else {
+                    passed++;
+                }
+            } catch (Exception e) {
+                testResult.addFailLog("第" + currentRow + "行测试用例执行时发生异常\n");
             }
         }
+        testResult.setPassNum(passed);
+        DecimalFormat df = new DecimalFormat("0.0");
+        testResult.setPercentage(Float.parseFloat(df.format((float)passed / currentRow * 100)));
         return testResult;
     }
 
