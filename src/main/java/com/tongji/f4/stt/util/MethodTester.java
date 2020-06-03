@@ -27,6 +27,7 @@ public class MethodTester {
     private Object instance;
     private Method method;
     private String[] params;
+    private String ret;
     private String fileName;
     private GlobalVariableOperator gvo;
     private static Logger LOGGER = LoggerFactory.getLogger(MethodTester.class);
@@ -40,6 +41,7 @@ public class MethodTester {
         MethodSignature ms = ml.getMethodSignature();
         String methodName = ms.getMethodName();
         String[] paramType = ms.getParamType();
+        String returnType = ms.getReturnType();
         try {
             Class testClass = gvo.getJarParser(jarName).getClass(className);
             Constructor c = testClass.getDeclaredConstructor();
@@ -47,7 +49,7 @@ public class MethodTester {
             Object instance = c.newInstance();
             Method method = testClass.getMethod(methodName, TypeClassConverter.parseParamClass(paramType));
             method.setAccessible(true);
-            methodTester = new MethodTester(instance, method, paramType, fileName, gvo);
+            methodTester = new MethodTester(instance, method, paramType, returnType, fileName, gvo);
 
         } catch (ClassNotFoundException e) {
             LOGGER.error("No such class named " + className);
@@ -63,10 +65,11 @@ public class MethodTester {
         return methodTester;
     }
 
-    private MethodTester(Object instance, Method method, String[] params, String fileName, GlobalVariableOperator gvo){
+    private MethodTester(Object instance, Method method, String[] params, String returnType, String fileName, GlobalVariableOperator gvo){
         this.instance = instance;
         this.method = method;
         this.params = params;
+        this.ret = returnType;
         this.fileName = fileName;
         this.gvo = gvo;
     }
@@ -90,12 +93,15 @@ public class MethodTester {
             }
             try {
                 Object returnVal = method.invoke(instance, actualParam);
-                Object expectVal = param.get(param.size() - 1);
+//                Object expectVal = param.get(param.size() - 1);
+                Object expectVal = tryParseParm(param.get(param.size() - 1), ret);
 
                 if(!expectVal.equals(returnVal)){
                     String log = "第" + currentRow + "行测试用例不通过，预期值为 " + expectVal + ", 实际值为 " + returnVal + "\n";
                     testResult.addFailLog(log);
                 }else {
+                    String log = "第" + currentRow + "行测试用例通过，预期值为 " + expectVal + ", 实际值为 " + returnVal + "\n";
+                    testResult.addFailLog(log);
                     passed++;
                 }
             } catch (Exception e) {
