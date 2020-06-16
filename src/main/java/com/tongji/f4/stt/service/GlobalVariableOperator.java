@@ -28,8 +28,11 @@ public class GlobalVariableOperator {
         Root = new File(path).getParentFile().getAbsolutePath();
 
         int sep = Root.lastIndexOf("\\file:");
+        int sep_linux = Root.lastIndexOf("/file");
         if(sep >= 0 && sep < Root.length()){
             Root = Root.substring(0, sep);
+        }else if(sep_linux >= 0 && sep_linux < Root.length()){
+            Root = Root.substring(0, sep_linux);
         }
 
         JarDirectory = Root + File.separator + "jar";
