@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @program: stt
  * @description: The interface for file upload
@@ -25,10 +27,11 @@ public class FileUploadController {
     @PostMapping("/excel")
     @ApiOperation("上传excel文件")
     @ApiImplicitParam(name = "file", value = "excel文件", required = true)
-    public String uploadExcel(@RequestParam("file") MultipartFile excelFIle){
+    public String uploadExcel(@RequestParam("file") MultipartFile excelFIle, HttpServletResponse response){
         if(fo.saveExcelFile(excelFIle)){
             return "Success";
         }else {
+            response.setStatus(500);
             return "Failure";
         }
     }
@@ -36,10 +39,11 @@ public class FileUploadController {
     @PostMapping("/jar")
     @ApiOperation("上传jar文件")
     @ApiImplicitParam(name = "file", value = "jar文件", required = true)
-    public String uploadJar(@RequestParam("file") MultipartFile jarFile){
+    public String uploadJar(@RequestParam("file") MultipartFile jarFile, HttpServletResponse response){
         if(fo.saveJarFile(jarFile)){
             return "success";
         }else {
+            response.setStatus(500);
             return "failure";
         }
     }
