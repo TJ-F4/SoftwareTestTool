@@ -48,11 +48,26 @@ public class FileOperator {
     }
 
     public boolean saveExcelFile(MultipartFile excelFIle){
-        return saveFile(gvo.getExcelPath(excelFIle.getOriginalFilename()), excelFIle);
+        String excelName = excelFIle.getOriginalFilename();
+
+        //处理部分浏览器文件名含有路径的问题
+        String[] secs = excelName.replaceAll("\\\\","/").split("/");
+        if (secs.length > 1){
+            excelName = secs[secs.length - 1];
+        }
+        return saveFile(gvo.getExcelPath(excelName), excelFIle);
     }
 
     public boolean saveJarFile(MultipartFile jarFile){
         String jarName = jarFile.getOriginalFilename();
+
+        //处理部分浏览器文件名含有路径的问题
+        String[] secs = jarName.replaceAll("\\\\","/").split("/");
+        if (secs.length > 1){
+            jarName = secs[secs.length - 1];
+        }
+
+
         String path = gvo.getJarPath(jarName);
         File file = new File(path);
         if (file.exists()){
