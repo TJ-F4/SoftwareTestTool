@@ -67,6 +67,12 @@ public class GlobalVariableOperator {
         }
     }
 
+    public void removeJarClMapping(String jarName){
+        if (jarClMap.containsKey(jarName)) {
+            jarClMap.remove(jarName);
+        }
+    }
+
     public boolean isJarLoaded(String jarName){
         return jarClMap.containsKey(jarName);
     }

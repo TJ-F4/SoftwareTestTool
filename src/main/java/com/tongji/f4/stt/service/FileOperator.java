@@ -26,9 +26,6 @@ public class FileOperator {
     public static boolean saveFile(String path,  MultipartFile excelFile){
         try{
             File localFile = new File(path);
-//            if(localFile.exists()){
-//                return false;
-//            }
 
             OutputStream os = new FileOutputStream(localFile);
 
@@ -55,7 +52,13 @@ public class FileOperator {
     }
 
     public boolean saveJarFile(MultipartFile jarFile){
-        return saveFile(gvo.getJarPath(jarFile.getOriginalFilename()), jarFile);
+        String jarName = jarFile.getOriginalFilename();
+        String path = gvo.getJarPath(jarName);
+        File file = new File(path);
+        if (file.exists()){
+            gvo.removeJarClMapping(jarName);
+        }
+        return saveFile(path, jarFile);
     }
 
     public String[] getAllJars(){
