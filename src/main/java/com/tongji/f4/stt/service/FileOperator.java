@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @program: stt
@@ -58,8 +61,12 @@ public class FileOperator {
         return saveFile(gvo.getExcelPath(excelName), excelFIle);
     }
 
-    public boolean saveJarFile(MultipartFile jarFile){
+    public boolean saveJarFile(MultipartFile jarFile, String version){
         String jarName = jarFile.getOriginalFilename();
+        if (version.contains("_")){
+            return false;
+        }
+        jarName = jarName + "_" + version;
 
         //处理部分浏览器文件名含有路径的问题
         String[] secs = jarName.replaceAll("\\\\","/").split("/");
@@ -79,6 +86,37 @@ public class FileOperator {
     public String[] getAllJars(){
         String jarRoot = gvo.getJarDirectory();
         File jarDir = new File(jarRoot);
+        HashSet<String> individualJars = new HashSet<>();
+        String[] jarNames= jarDir.list();
+        for (String jarName :
+                jarNames) {
+            int underline_pos = jarName.lastIndexOf('_');
+            String pureJarName = jarName.substring(0, underline_pos);
+            individualJars.add(pureJarName);
+        }
+        String[] individualJarsArray = new String[individualJars.size()];
+        individualJars.toArray(individualJarsArray);
+        return individualJarsArray;
+    }
+
+    public List<String> getAllVerisons(String jar_name){
+        List<String> versions = new ArrayList<>();
+        File jarDir = new File(gvo.getJarDirectory());
+        String[] jarNames = jarDir.list();
+        for (String jarName :
+                jarNames) {
+            int underline_pos = jarName.lastIndexOf('_');
+            String pureJarName = jarName.substring(0, underline_pos);
+            String version = jarName.substring(underline_pos + 1);
+            if (pureJarName.equals(jar_name)){
+                versions.add(version);
+            }
+        }
+        return versions;
+    }
+
+    public String[] getAllJarsWithVersion(){
+        File jarDir = new File(gvo.getJarDirectory());
         return jarDir.list();
     }
 

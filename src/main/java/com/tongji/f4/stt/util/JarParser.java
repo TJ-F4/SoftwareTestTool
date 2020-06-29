@@ -59,6 +59,9 @@ public class JarParser {
         classList = new ArrayList<>();
         try{
             File f = new File(jarFilePath);
+            if (!f.exists()){
+                return classList;
+            }
             URL url = f.toURI().toURL();
             ucl = new URLClassLoader(new URL[]{url},Thread.currentThread().getContextClassLoader());
 

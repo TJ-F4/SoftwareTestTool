@@ -31,10 +31,40 @@ public class JarContentController {
     @Autowired(required = true)
     GlobalVariableOperator gvo;
 
+    @Autowired(required = true)
+    FileOperator fo;
+
+    @GetMapping("/exists")
+    @ApiOperation("获取该jar包的所有版本")
+    @ApiImplicitParam(name = "jarName", value = "jar包文件名", required = true)
+    public boolean jarVersionExists(@RequestParam("jarName")String jar_name, @RequestParam("version") String version){
+        String jarName = jar_name + "_" + version;
+        String[] allJarVersions = fo.getAllJarsWithVersion();
+        for (String jarVersion :
+                allJarVersions) {
+            if (jarName.equals(jarVersion)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    @GetMapping("/versions")
+    @ApiOperation("获取该jar包的所有版本")
+    @ApiImplicitParam(name = "jarName", value = "jar包文件名", required = true)
+    public List<String> getJarVersions(@RequestParam("jarName") String jarName){
+        return fo.getAllVerisons(jarName);
+    }
+
     @GetMapping("/classes")
     @ApiOperation("获取jar包中的所有类")
-    @ApiImplicitParam(name = "jarName", value = "jar包文件名", required = true)
-    public List<String> getJarClasses(@RequestParam("jarName") String jarName){
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "jarName", value = "jar包文件名", required = true),
+            @ApiImplicitParam(name = "version", value = "jar包版本", required = true)
+    })
+    public List<String> getJarClasses(@RequestParam("jarName") String jar_name, @RequestParam("version") String version){
+        String jarName = jar_name + "_" + version;
         if(!gvo.isJarLoaded(jarName)) {
             JarParser jp = new JarParser();
             gvo.putJarClMapping(jarName, jp);
@@ -48,11 +78,14 @@ public class JarContentController {
     @ApiImplicitParams(
             {
                     @ApiImplicitParam(name = "jarName", value = "jar包文件名", required = true),
+                    @ApiImplicitParam(name = "version", value = "jar包版本", required = true),
                     @ApiImplicitParam(name = "className", value = "类名", required = true)
             }
     )
-    public List<MethodSignature> getJarClasses(@RequestParam("jarName") String jarName,
+    public List<MethodSignature> getJarMethods(@RequestParam("jarName") String jar_name,
+                                               @RequestParam("version") String version,
                                                @RequestParam("className") String className){
+        String jarName = jar_name + "_" + version;
         if(!gvo.isJarLoaded(jarName)) {
             JarParser jp = new JarParser();
             gvo.putJarClMapping(jarName, jp);

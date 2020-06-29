@@ -3,6 +3,7 @@ package com.tongji.f4.stt.controller;
 import com.tongji.f4.stt.service.FileOperator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +39,14 @@ public class FileUploadController {
 
     @PostMapping("/jar")
     @ApiOperation("上传jar文件")
-    @ApiImplicitParam(name = "file", value = "jar文件", required = true)
-    public String uploadJar(@RequestParam("file") MultipartFile jarFile, HttpServletResponse response){
-        if(fo.saveJarFile(jarFile)){
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "file", value = "jar文件", required = true),
+            @ApiImplicitParam(name= "version", value = "jar版本", required = true)
+    })
+    public String uploadJar(@RequestParam("file") MultipartFile jarFile,
+                            @RequestParam("version") String version,
+                            HttpServletResponse response){
+        if(fo.saveJarFile(jarFile, version)){
             return "success";
         }else {
             response.setStatus(500);

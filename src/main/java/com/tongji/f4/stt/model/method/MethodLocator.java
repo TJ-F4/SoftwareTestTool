@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiModelProperty;
 public class MethodLocator {
     @ApiModelProperty(value = "jar文件名")
     private String jarName;
+    @ApiModelProperty(value = "jar版本")
+    private String version;
     @ApiModelProperty(value = "类名")
     private String className;
     @ApiModelProperty(value = "方法签名")
@@ -40,5 +42,13 @@ public class MethodLocator {
 
     public void setMethodSignature(MethodSignature methodSignature) {
         this.methodSignature = methodSignature;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

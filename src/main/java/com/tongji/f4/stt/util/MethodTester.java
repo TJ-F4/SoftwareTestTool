@@ -36,7 +36,7 @@ public class MethodTester {
         MethodTester methodTester = null;
         String fileName = ets.getExcelFileName();
         MethodLocator ml = ets.getMethodLocator();
-        String jarName = ml.getJarName();
+        String jarName = ml.getJarName() + "_" + ml.getVersion();
         String className = ml.getClassName();
         MethodSignature ms = ml.getMethodSignature();
         String methodName = ms.getMethodName();
@@ -96,7 +96,7 @@ public class MethodTester {
 //                Object expectVal = param.get(param.size() - 1);
                 Object expectVal = tryParseParm(param.get(param.size() - 1), ret);
 
-                if(!expectVal.equals(returnVal)){
+                if(!objectEquals(returnVal, expectVal, ret)){
                     String log = "第" + currentRow + "行测试用例不通过，预期值为 " + expectVal + ", 实际值为 " + returnVal + "\n";
                     testResult.addFailLog(log);
                 }else {
@@ -112,6 +112,28 @@ public class MethodTester {
         DecimalFormat df = new DecimalFormat("0.0");
         testResult.setPercentage(Float.parseFloat(df.format((float)passed / currentRow * 100)));
         return testResult;
+    }
+
+    private boolean objectEquals(Object o1, Object o2, String type){
+        switch (type){
+            case "int":
+            case "java.lang.Integer":
+            case "java.lang.String":
+            case "char":
+            case "java.lang.Character":
+                return o1.equals(o2);
+            case "float":
+            case "java.lang.Float":
+                float diff1 = (float)o1 - (float)o2;
+                return Math.abs(diff1) < 0.0000001;
+            case "double":
+            case "java.lang.Double":
+                double diff2 = (double)o1 - (double)o2;
+                return Math.abs(diff2) < 0.0000001;
+            default:
+                break;
+        }
+        return false;
     }
 
     private Object[] tryParseParam(List<String> param){
@@ -142,6 +164,7 @@ public class MethodTester {
                 case "double":
                 case "java.lang.Double":
                     o = Double.parseDouble(param);
+                    break;
                 case "java.lang.String":
                     o = param;
                     break;
